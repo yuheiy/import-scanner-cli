@@ -1,6 +1,6 @@
 # @yuheiy/import-scanner-cli
 
-Scan files for import declarations based on specified module patterns.
+Scan files for import declarations.
 
 ## Install
 
@@ -14,30 +14,20 @@ npm install @yuheiy/import-scanner-cli
 $ import-scanner --help
 
   Usage
-    $ import-scanner [module-pattern...]
+    $ import-scanner [path...]
 
   Options
-    --regexp   Use RegExp for module-patten
-    --path     Specify target file paths (default: **/*.{js,ts,jsx,tsx})
-    --ignore   Ignore specific file paths from target (default: **/node_modules)
-    --json     Output analyzed results as a JSON
+    --ignore          Ignore specific file paths
+    --module          The module name targeted by the imports to be retrieved
+    --module-regexp   The regular expression for the module name targeted by the imports to be retrieved
+    --json            Output scanned imports as a JSON
 
   Examples
-    Basic usage:
-    $ import-scanner my-module
-    $ import-scanner my-module another-my-module
-
-    Use regular expressions, including subpaths:
-    $ import-scanner "^my-module(/.+)?$" --regexp
-
-    Specify the target file paths:
-    $ import-scanner my-module --path="subdir/**/*.{js,ts,jsx,tsx}"
-
-    Ignore specific file paths:
-    $ import-scanner my-module --ignore="dist/**" --ignore="node_modules/**"
-
-    Output as a JSON:
-    $ import-scanner my-module --json
+    $ import-scanner **/*.{js,ts,jsx,tsx}
+    $ import-scanner **/*.{js,ts,jsx,tsx} --ignore="**/dist/**" --ignore="**/node_modules/**"
+    $ import-scanner **/*.{js,ts,jsx,tsx} --module=my-module
+    $ import-scanner **/*.{js,ts,jsx,tsx} --module-regexp="^my-module(/.+)?$"
+    $ import-scanner **/*.{js,ts,jsx,tsx} --json
 ```
 
 ## Related

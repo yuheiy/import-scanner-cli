@@ -1,7 +1,7 @@
 {
 	"name": "@yuheiy/import-scanner-cli",
 	"version": "0.0.1",
-	"description": "Scan files for import declarations based on specified module patterns",
+	"description": "Scan files for import declarations",
 	"repository": "yuheiy/import-scanner-cli",
 	"license": "MIT",
 	"author": "Yuhei Yasuda <yuhei.yasuda1003@gmail.com> (https://yuheiy.com/)",
@@ -9,9 +9,7 @@
 	"bin": {
 		"import-scanner": "./dist/src/cli.js"
 	},
-	"files": [
-		"dist/src"
-	],
+	"files": ["dist/src"],
 	"scripts": {
 		"build": "tsc --build",
 		"check": "biome check --write",
@@ -20,7 +18,7 @@
 		"test": "vitest"
 	},
 	"dependencies": {
-		"@yuheiy/import-scanner": "0.0.1",
+		"@yuheiy/import-scanner": "^0.0.2",
 		"fast-glob": "^3.3.2",
 		"yoctocolors": "^2.1.1"
 	},

@@ -9,27 +9,7 @@ beforeAll(async () => {
 test('basic usage', async () => {
 	const { stdout } = await execa('node', [
 		'./dist/src/cli.js',
-		'my-module',
-		'--ignore',
-		'dist',
-		'--ignore',
-		'node_modules',
-	]);
-	expect(stripAnsi(stdout)).toMatchInlineSnapshot(`
-		"Found import m1 from 'my-module'; in "test/__fixtures__/a.ts".
-		Found import m1 from 'my-module'; in "test/__fixtures__/b.ts"."
-	`);
-});
-
-test('use regexp', async () => {
-	const { stdout } = await execa('node', [
-		'./dist/src/cli.js',
-		'^my-module(/.+)?$',
-		'--regexp',
-		'--ignore',
-		'dist',
-		'--ignore',
-		'node_modules',
+		'test/__fixtures__/*.ts',
 	]);
 	expect(stripAnsi(stdout)).toMatchInlineSnapshot(`
 		"Found import m1 from 'my-module'; in "test/__fixtures__/a.ts".
@@ -39,47 +19,49 @@ test('use regexp', async () => {
 	`);
 });
 
-test('use path', async () => {
+test('set ignore', async () => {
 	const { stdout } = await execa('node', [
 		'./dist/src/cli.js',
-		'my-module',
-		'--path',
+		'test/__fixtures__/*.ts',
+		'--ignore',
 		'**/a.ts',
-		'--ignore',
-		'dist',
-		'--ignore',
-		'node_modules',
+	]);
+	expect(stripAnsi(stdout)).toMatchInlineSnapshot(`
+		"Found import m1 from 'my-module'; in "test/__fixtures__/b.ts".
+		Found import m2 from 'my-module/sub'; in "test/__fixtures__/b.ts"."
+	`);
+});
+
+test('set module', async () => {
+	const { stdout } = await execa('node', [
+		'./dist/src/cli.js',
+		'test/__fixtures__/a.ts',
+		'--module',
+		'my-module',
 	]);
 	expect(stripAnsi(stdout)).toMatchInlineSnapshot(
 		`"Found import m1 from 'my-module'; in "test/__fixtures__/a.ts"."`,
 	);
 });
 
-test('use ignore paths', async () => {
+test('set module-regexp', async () => {
 	const { stdout } = await execa('node', [
 		'./dist/src/cli.js',
-		'my-module',
-		'--ignore',
-		'**/a.ts',
-		'--ignore',
-		'dist',
-		'--ignore',
-		'node_modules',
+		'test/__fixtures__/a.ts',
+		'--module-regexp',
+		'^my-module(/.+)?$',
 	]);
-	expect(stripAnsi(stdout)).toMatchInlineSnapshot(
-		`"Found import m1 from 'my-module'; in "test/__fixtures__/b.ts"."`,
-	);
+	expect(stripAnsi(stdout)).toMatchInlineSnapshot(`
+		"Found import m1 from 'my-module'; in "test/__fixtures__/a.ts".
+		Found import m2 from 'my-module/sub'; in "test/__fixtures__/a.ts"."
+	`);
 });
 
-test('output as a JSON', async () => {
+test('set json', async () => {
 	const { stdout } = await execa('node', [
 		'./dist/src/cli.js',
-		'my-module',
+		'test/__fixtures__/a.ts',
 		'--json',
-		'--ignore',
-		'dist',
-		'--ignore',
-		'node_modules',
 	]);
 	expect(() => JSON.parse(stdout)).not.toThrowError();
 });

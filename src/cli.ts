@@ -1,24 +1,28 @@
 #!/usr/bin/env node
 import { parseArgs } from 'node:util';
-import { scanImportDeclarations } from '@yuheiy/import-scanner';
+import {
+	scanImportDeclarations,
+	type ScannedImportDeclaration,
+} from '@yuheiy/import-scanner';
 import fg from 'fast-glob';
 import { gray, white } from 'yoctocolors';
 
 const args = parseArgs({
 	options: {
-		regexp: {
-			type: 'boolean',
-			default: false,
-		},
-		path: {
-			type: 'string',
-			multiple: true,
-			default: ['**/*.{js,ts,jsx,tsx}'],
-		},
 		ignore: {
 			type: 'string',
 			multiple: true,
-			default: ['**/node_modules'],
+			default: [],
+		},
+		module: {
+			type: 'string',
+			multiple: true,
+			default: [],
+		},
+		'module-regexp': {
+			type: 'string',
+			multiple: true,
+			default: [],
 		},
 		json: {
 			type: 'boolean',
@@ -36,45 +40,42 @@ const args = parseArgs({
 if (args.values.help || args.positionals.length === 0) {
 	console.log(`
 	Usage
-	  $ import-scanner [module-pattern...]
+	  $ import-scanner [path...]
 
 	Options
-	  --regexp   Use RegExp for module-patten
-	  --path     Specify target file paths (default: **/*.{js,ts,jsx,tsx})
-	  --ignore   Ignore specific file paths from target (default: **/node_modules)
-	  --json     Output analyzed results as a JSON
+	  --ignore          Ignore specific file paths
+	  --module          The module name targeted by the imports to be retrieved
+	  --module-regexp   The regular expression for the module name targeted by the imports to be retrieved
+	  --json            Output scanned imports as a JSON
 
 	Examples
-	  Basic usage:
-	  $ import-scanner my-module
-	  $ import-scanner my-module another-my-module
-
-	  Use regular expressions, including subpaths:
-	  $ import-scanner "^my-module(\/.+)?$" --regexp
-
-	  Specify the target file paths:
-	  $ import-scanner my-module --path="subdir/**/*.{js,ts,jsx,tsx}"
-
-	  Ignore specific file paths:
-	  $ import-scanner my-module --ignore="dist/**" --ignore="node_modules/**"
-
-	  Output as a JSON:
-	  $ import-scanner my-module --json
+	  $ import-scanner **/*.{js,ts,jsx,tsx}
+	  $ import-scanner **/*.{js,ts,jsx,tsx} --ignore="**/dist/**" --ignore="**/node_modules/**"
+	  $ import-scanner **/*.{js,ts,jsx,tsx} --module=my-module
+	  $ import-scanner **/*.{js,ts,jsx,tsx} --module-regexp="^my-module(\/.+)?$"
+	  $ import-scanner **/*.{js,ts,jsx,tsx} --json
 `);
 	process.exit(0);
 }
 
-const modulePatterns = args.values.regexp
-	? args.positionals.map((pattern) => new RegExp(pattern))
-	: args.positionals;
+const modulePatterns = args.values['module-regexp'].map(
+	(value) => new RegExp(value),
+);
 
-const filePaths = await fg(args.values.path, {
+function isMatches({ moduleSpecifierValue }: ScannedImportDeclaration) {
+	return (
+		(args.values.module.length === 0 && modulePatterns.length === 0) ||
+		args.values.module.some((value) => value === moduleSpecifierValue) ||
+		modulePatterns.some((pattern) => pattern.test(moduleSpecifierValue))
+	);
+}
+
+const filePaths = await fg(args.positionals, {
 	ignore: args.values.ignore,
 });
 
-const importDeclarations = await scanImportDeclarations(
-	modulePatterns,
-	filePaths,
+const importDeclarations = filePaths.flatMap((filePath) =>
+	scanImportDeclarations(filePath).filter((decl) => isMatches(decl)),
 );
 
 if (args.values.json) {
