@@ -1,6 +1,6 @@
 {
 	"name": "@yuheiy/import-scanner-cli",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Scan files for import declarations",
 	"repository": "yuheiy/import-scanner-cli",
 	"license": "MIT",
@@ -9,7 +9,9 @@
 	"bin": {
 		"import-scanner": "./dist/src/cli.js"
 	},
-	"files": ["dist/src"],
+	"files": [
+		"dist/src"
+	],
 	"scripts": {
 		"build": "tsc --build",
 		"check": "biome check --write",
