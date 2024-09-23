@@ -1,4 +1,4 @@
-# @yuheiy/import-analyzer-cli
+# @yuheiy/import-scanner-cli
 
 Scan files for import declarations based on specified module patterns.
 
