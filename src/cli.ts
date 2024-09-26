@@ -82,7 +82,7 @@ if (args.values.json) {
 	console.log(JSON.stringify(importDeclarations, null, '  '));
 } else {
 	for (const { statement, filePath } of importDeclarations) {
-		console.log(gray(`Found ${white(statement)} in "${white(filePath)}".`));
+		console.log(gray(`${white(statement)} in "${white(filePath)}".`));
 	}
 
 	if (importDeclarations.length === 0) {

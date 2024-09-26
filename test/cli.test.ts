@@ -12,10 +12,10 @@ test('basic usage', async () => {
 		'test/__fixtures__/*.ts',
 	]);
 	expect(stripAnsi(stdout)).toMatchInlineSnapshot(`
-		"Found import m1 from 'my-module'; in "test/__fixtures__/a.ts".
-		Found import m2 from 'my-module/sub'; in "test/__fixtures__/a.ts".
-		Found import m1 from 'my-module'; in "test/__fixtures__/b.ts".
-		Found import m2 from 'my-module/sub'; in "test/__fixtures__/b.ts"."
+		"import m1 from 'my-module'; in "test/__fixtures__/a.ts".
+		import m2 from 'my-module/sub'; in "test/__fixtures__/a.ts".
+		import m1 from 'my-module'; in "test/__fixtures__/b.ts".
+		import m2 from 'my-module/sub'; in "test/__fixtures__/b.ts"."
 	`);
 });
 
@@ -27,8 +27,8 @@ test('set ignore', async () => {
 		'**/a.ts',
 	]);
 	expect(stripAnsi(stdout)).toMatchInlineSnapshot(`
-		"Found import m1 from 'my-module'; in "test/__fixtures__/b.ts".
-		Found import m2 from 'my-module/sub'; in "test/__fixtures__/b.ts"."
+		"import m1 from 'my-module'; in "test/__fixtures__/b.ts".
+		import m2 from 'my-module/sub'; in "test/__fixtures__/b.ts"."
 	`);
 });
 
@@ -40,7 +40,7 @@ test('set module', async () => {
 		'my-module',
 	]);
 	expect(stripAnsi(stdout)).toMatchInlineSnapshot(
-		`"Found import m1 from 'my-module'; in "test/__fixtures__/a.ts"."`,
+		`"import m1 from 'my-module'; in "test/__fixtures__/a.ts"."`,
 	);
 });
 
@@ -52,8 +52,8 @@ test('set module-regexp', async () => {
 		'^my-module(/.+)?$',
 	]);
 	expect(stripAnsi(stdout)).toMatchInlineSnapshot(`
-		"Found import m1 from 'my-module'; in "test/__fixtures__/a.ts".
-		Found import m2 from 'my-module/sub'; in "test/__fixtures__/a.ts"."
+		"import m1 from 'my-module'; in "test/__fixtures__/a.ts".
+		import m2 from 'my-module/sub'; in "test/__fixtures__/a.ts"."
 	`);
 });
 
