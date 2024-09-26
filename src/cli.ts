@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { parseArgs } from 'node:util';
 import {
-	scanImportDeclarations,
 	type ScannedImportDeclaration,
+	scanImportDeclarations,
 } from '@yuheiy/import-scanner';
 import { glob } from 'tinyglobby';
 import { gray, white } from 'yoctocolors';

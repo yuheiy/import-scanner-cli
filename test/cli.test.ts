@@ -1,6 +1,6 @@
 import { execa } from 'execa';
-import { beforeAll, expect, test } from 'vitest';
 import stripAnsi from 'strip-ansi';
+import { beforeAll, expect, test } from 'vitest';
 
 beforeAll(async () => {
 	await execa('npm', ['run', 'build']);
