@@ -4,7 +4,7 @@ import {
 	scanImportDeclarations,
 	type ScannedImportDeclaration,
 } from '@yuheiy/import-scanner';
-import fg from 'fast-glob';
+import { glob } from 'tinyglobby';
 import { gray, white } from 'yoctocolors';
 
 const args = parseArgs({
@@ -70,7 +70,7 @@ function isMatches({ moduleSpecifierValue }: ScannedImportDeclaration) {
 	);
 }
 
-const filePaths = await fg(args.positionals, {
+const filePaths = await glob(args.positionals, {
 	ignore: args.values.ignore,
 });
 
